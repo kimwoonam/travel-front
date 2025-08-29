@@ -14,7 +14,7 @@ interface Board {
 export default function BoardEditPage() {
   const { uuid } = useParams<{ uuid: string }>()
   const navigate = useNavigate()
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, token } = useAuth()
   const [board, setBoard] = useState<Board | null>(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -37,8 +37,17 @@ export default function BoardEditPage() {
   }, [uuid, isLoggedIn, navigate])
 
   async function fetchBoardDetail() {
+
     try {
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/${uuid}`)
+
+      const headers: Record<string, string> = {'Content-Type': 'application/json'}
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/${uuid}`, {
+        headers
+      })
       if (!res.ok) {
         if (res.status === 404) {
           throw new Error('게시글을 찾을 수 없습니다.')
@@ -67,10 +76,15 @@ export default function BoardEditPage() {
     setIsSubmitting(true)
     setMessage('')
 
+    const headers: Record<string, string> = {'Content-Type': 'application/json'}
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
     try {
       const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/${uuid}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ title, content, author })
       })
 

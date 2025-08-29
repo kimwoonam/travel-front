@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react'
 
 interface AuthContextType {
   isLoggedIn: boolean
@@ -11,7 +11,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({children}: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [token, setToken] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const savedToken = localStorage.getItem('token')
     const savedEmail = localStorage.getItem('userEmail')
     const savedDisplayName = localStorage.getItem('userDisplayName')
-    
+
     if (savedToken && savedEmail) {
       setIsLoggedIn(true)
       setToken(savedToken)
@@ -54,9 +54,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, token, userEmail, userDisplayName, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{isLoggedIn, token, userEmail, userDisplayName, login, logout}}>
+        {children}
+      </AuthContext.Provider>
   )
 }
 
