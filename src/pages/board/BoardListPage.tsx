@@ -16,10 +16,15 @@ export default function BoardListPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const navigate = useNavigate()
-  const {logout, token} = useAuth()
+  const {logout, token, isLoggedIn} = useAuth()
 
   useEffect(() => {
-    fetchBoards()
+    if (isLoggedIn) {
+      fetchBoards()
+    } else {
+      logout();
+      navigate('/login')
+    }
   }, [])
 
   async function fetchBoards() {
@@ -36,9 +41,15 @@ export default function BoardListPage() {
       console.log('응답 상태:', res.status, res.statusText)
 
       if (!res.ok) {
-        const errorText = await res.text()
-        console.error('API 오류:', errorText)
-        throw new Error(`게시판 목록을 불러올 수 없습니다. (${res.status})`)
+        if (res.status === 401) {
+          logout();
+          navigate('/')
+          throw new Error(`게시판 목록을 불러올 수 없습니다. (${res.status})`)
+        } else {
+          const errorText = await res.text()
+          console.error('API 오류:', errorText)
+          throw new Error(`게시판 목록을 불러올 수 없습니다. (${res.status})`)
+        }
       }
 
       const data = await res.json()
