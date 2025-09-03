@@ -1,4 +1,5 @@
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react'
+import {isFileLoadingAllowed} from "vite";
 
 interface AuthContextType {
   isLoggedIn: boolean
@@ -19,24 +20,27 @@ export function AuthProvider({children}: { children: ReactNode }) {
 
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 상태 확인
-    const savedToken = localStorage.getItem('token')
+    const token = getItemWithExpiry('token');
     const savedEmail = localStorage.getItem('userEmail')
     const savedDisplayName = localStorage.getItem('userDisplayName')
 
-    if (savedToken && savedEmail) {
+    if (token) {
       setIsLoggedIn(true)
-      setToken(savedToken)
+      setToken(token)
       setUserEmail(savedEmail)
       setUserDisplayName(savedDisplayName)
+    } else {
+      console.log('유효하지 않은 token 입니다.')
+      logout()
     }
   }, [])
 
   const login = (token: string, email: string, displayName: string) => {
     setIsLoggedIn(true)
-    setToken(token)
+    setToken(token);
     setUserEmail(email)
     setUserDisplayName(displayName)
-    localStorage.setItem('token', token)
+    setItemWithExpiry(token);
     localStorage.setItem('userEmail', email)
     localStorage.setItem('userDisplayName', displayName)
     localStorage.setItem('isLoggedIn', 'true')
@@ -51,6 +55,36 @@ export function AuthProvider({children}: { children: ReactNode }) {
     localStorage.removeItem('userEmail')
     localStorage.removeItem('userDisplayName')
     localStorage.removeItem('isLoggedIn')
+  }
+
+  // value: 저장할 값
+  const setItemWithExpiry = (value: any ) => {
+    const now = new Date(); // 현재 시간
+    const item = {
+      value: value,
+      expiry: now.getTime() + 3600 * 1000, // 만료 시간을 밀리초 단위로 계산하여 저장(초단위)
+    };
+    localStorage.setItem('token', JSON.stringify(item));
+  }
+
+  const getItemWithExpiry = (key: any) => {
+    const itemStr = localStorage.getItem(key);
+
+    // 저장된 아이템이 없으면 null 반환
+    if (!itemStr) {
+      return null;
+    }
+
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+
+    // 현재 시간이 만료 시간보다 크면(만료되었으면)
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key); // 로컬스토리지에서 아이템 삭제
+      return null;
+    }
+
+    return item.value;
   }
 
   return (
