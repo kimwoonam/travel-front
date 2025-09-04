@@ -48,3 +48,7 @@
 ├── local.env // 환경변수 설정
 └── main.tsx  // root 및 router 설정
 ``` 
+## github
+
+* frontend : https://github.com/kimwoonam/travel-front
+* backend : https://github.com/kimwoonam/travel-backend
