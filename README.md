@@ -27,6 +27,7 @@
 ### DBMS
 
 * PostgreSQL 16
+* Docker를 사용하여 생성함
 
 
 ## 구조
