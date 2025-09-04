@@ -9,7 +9,7 @@ import BoardListPage from './pages/board/BoardListPage'
 import BoardWritePage from './pages/board/BoardWritePage'
 import BoardDetailPage from './pages/board/BoardDetailPage'
 import BoardEditPage from './pages/board/BoardEditPage'
-import {AuthProvider} from './contexts/AuthContext'
+import AuthProvider from './contexts/AuthContext'
 
 const router = createBrowserRouter([
   {path: '/', element: <IndexPage/>},

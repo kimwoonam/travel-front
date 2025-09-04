@@ -17,12 +17,13 @@ export default function BoardListPage() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const {logout, token, isLoggedIn} = useAuth()
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [selectedBoardsValues, setSelectedBoardsValues] = useState(new Set());
 
   useEffect(() => {
     if (isLoggedIn) {
       fetchBoards()
     } else {
-      logout();
       navigate('/login')
     }
   }, [])
@@ -94,6 +95,56 @@ export default function BoardListPage() {
     }
   }
 
+  const handleCheckboxChange = (e: any) => {
+    const {value, checked} = e.target;
+
+    // Set 객체는 중복을 자동으로 방지
+    setSelectedBoardsValues(prevBoards => {
+      const newBoards = new Set(prevBoards);
+      if (checked) {
+        newBoards.add(value);
+      } else {
+        newBoards.delete(value);
+      }
+      console.log(newBoards)
+      return newBoards;
+    });
+  };
+
+  async function deleteBoards() {
+    // 버튼 클릭 시 Set 객체의 값을 배열로 변환하여 확인
+    const selectedArray = Array.from(selectedBoardsValues);
+    if (!confirm('정말로 게시글을 삭제하시겠습니까?')) {
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+
+      const headers: Record<string, string> = {'Content-Type': 'application/json'}
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/bulk/${selectedArray.join(',')}`, {
+        method: 'DELETE',
+        headers
+      })
+
+      if (res.status !== 204) {
+        console.log('res.status: ', res.status)
+        throw new Error('게시글 삭제에 실패했습니다.')
+      }
+
+      alert('게시글이 삭제되었습니다.')
+      fetchBoards()
+    } catch (err: any) {
+      alert(err.message)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   async function handleLogout() {
     try {
       if (token) {
@@ -133,6 +184,21 @@ export default function BoardListPage() {
         }}>
           <h2>게시판 목록</h2>
           <div style={{display: 'flex', gap: 10}}>
+            <button
+                onClick={deleteBoards}
+                disabled={isDeleting}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: isDeleting ? '#ccc' : '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: isDeleting ? 'not-allowed' : 'pointer',
+                  fontSize: '16px'
+                }}
+            >
+              {isDeleting ? '삭제 중...' : '게시글 삭제하기'}
+            </button>
             <button
                 onClick={addSampleData}
                 style={{
@@ -189,6 +255,10 @@ export default function BoardListPage() {
                     }}>
                       <div style={{flex: 1}}>
                         <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>
+                          <input type={"checkbox"}
+                                 onChange={handleCheckboxChange}
+                                 value={board.uuid}
+                                 style={{marginRight: 10}}/>
                           <Link to={`/boards/${board.uuid}`}
                                 style={{color: '#333', textDecoration: 'none'}}>
                             {board.title}
