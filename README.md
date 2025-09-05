@@ -29,6 +29,8 @@
 * PostgreSQL 16
 * Docker를 사용하여 생성함
 
+### ETC 
+* REDIS
 
 ## 구조
 ```bash
