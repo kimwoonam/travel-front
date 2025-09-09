@@ -36,7 +36,7 @@ export default function BoardListPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards`, {
         headers
       })
       console.log('응답 상태:', res.status, res.statusText)
@@ -72,7 +72,7 @@ export default function BoardListPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/init`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/init`, {
         method: 'POST',
         headers
       })
@@ -126,7 +126,7 @@ export default function BoardListPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/bulk/${selectedArray.join(',')}`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/bulk/${selectedArray.join(',')}`, {
         method: 'DELETE',
         headers
       })
@@ -148,7 +148,7 @@ export default function BoardListPage() {
   async function handleLogout() {
     try {
       if (token) {
-        const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/auth/logout`, {
+        const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/auth/logout`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ export default function BoardListPage() {
           }
         })
 
-        if (res.ok) {
+        if (res.status === 204) {
           console.log('서버 로그아웃 성공')
         } else {
           console.log('서버 로그아웃 실패:', res.status)

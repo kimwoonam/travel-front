@@ -17,7 +17,7 @@ export default function DeletePage() {
       }
       const params = new URLSearchParams({email, password})
       // @ts-ignore
-      const res = await fetch(`${import.meta.env.VITE_API_BASE || 'http://localhost:8080'}/api/auth/delete?${params.toString()}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/auth/delete?${params.toString()}`, {
         method: 'DELETE',
         headers
       })

@@ -45,7 +45,7 @@ export default function BoardEditPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/${uuid}`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/${uuid}`, {
         headers
       })
       if (!res.ok) {
@@ -82,7 +82,7 @@ export default function BoardEditPage() {
     }
 
     try {
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/${uuid}`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/${uuid}`, {
         method: 'PUT',
         headers,
         body: JSON.stringify({ title, content, author })

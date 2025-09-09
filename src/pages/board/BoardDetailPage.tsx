@@ -14,7 +14,7 @@ interface Board {
 export default function BoardDetailPage() {
   const {uuid} = useParams<{ uuid: string }>()
   const navigate = useNavigate()
-  const {isLoggedIn, token} = useAuth()
+  const {isLoggedIn, token, logout} = useAuth()
   const [board, setBoard] = useState<Board | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -39,12 +39,15 @@ export default function BoardDetailPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/${uuid}`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/${uuid}`, {
         headers
       })
       if (!res.ok) {
         if (res.status === 404) {
           throw new Error('게시글을 찾을 수 없습니다.')
+        } else if (res.status === 401) {
+          logout()
+          navigate('/')
         }
         throw new Error('게시글을 불러올 수 없습니다.')
       }
@@ -70,7 +73,7 @@ export default function BoardDetailPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards/${uuid}`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/${uuid}`, {
         method: 'DELETE',
         headers
       })

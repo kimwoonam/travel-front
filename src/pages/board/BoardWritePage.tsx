@@ -34,7 +34,7 @@ export default function BoardWritePage() {
     }
 
     try {
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080'}/api/boards`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards`, {
         method: 'POST',
         headers,
         body: JSON.stringify({title, content, author})
