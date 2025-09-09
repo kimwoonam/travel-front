@@ -23,7 +23,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 상태 확인
-    const token = Cookies.get('token') || null;
+    const token = Cookies.get('travel-jwt') || null;
 
     if (token) {
       setIsLoggedIn(true);
@@ -35,11 +35,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = (token: string, email: string, displayName: string) => {
+
     setIsLoggedIn(true);
     setToken(token);
     setUserEmail(email);
     setUserDisplayName(displayName);
-    Cookies.set('token', token, { expires: 1/24, path: "/", sameSite: "strict", domain: "127.0.0.1" });
+    Cookies.set('travel-jwt', token, { expires: 1/24, path: "/", sameSite: "Strict", domain: "127.0.0.1" });
   };
 
   const logout = () => {
@@ -47,7 +48,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setUserEmail(null);
     setUserDisplayName(null);
-    Cookies.remove('token', { path: "/", sameSite: "strict", domain: "127.0.0.1" });
+    Cookies.remove('travel-jwt', { path: "/", sameSite: "Strict", domain: "127.0.0.1" });
   };
 
   return (
