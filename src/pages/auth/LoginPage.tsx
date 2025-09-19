@@ -33,7 +33,7 @@ export default function LoginPage() {
       const data = await res.json()
       setMessage('로그인 성공!')
       // 로그인 상태 업데이트 (JWT 토큰 포함)
-      login(data.token, data.email, data.displayName)
+      login(data.token, data.email, data.name)
 
     } catch (err: any) {
       setMessage(err.message || '에러 발생')

@@ -5,7 +5,7 @@ import {useAuth} from '../../contexts/AuthContext'
 export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [displayName, setDisplayName] = useState('')
+  const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
   const {login} = useAuth()
@@ -17,7 +17,7 @@ export default function SignupPage() {
       const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/auth/signup`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email, password, displayName})
+        body: JSON.stringify({email, password, name})
       })
 
       if (!res.ok) {
@@ -29,7 +29,7 @@ export default function SignupPage() {
       setMessage('회원가입 성공!')
       // 회원가입 성공 시 자동 로그인
       console.log(data);
-      login(data.token, data.email, data.displayName)
+      login(data.token, data.email, data.name)
       setTimeout(() => {
         navigate('/boards')
       }, 1000)
@@ -44,7 +44,7 @@ export default function SignupPage() {
         <form onSubmit={onSubmit} style={{display: 'grid', gap: 12}}>
           <label>
             이름
-            <input value={displayName} onChange={e => setDisplayName(e.target.value)} required/>
+            <input value={name} onChange={e => setName(e.target.value)} required/>
           </label>
           <label>
             이메일
