@@ -7,7 +7,7 @@ interface Board {
   uuid: string
   title: string
   content: string
-  author: string
+  nickName: string
   createdAt: string
 }
 
@@ -18,7 +18,7 @@ export default function BoardEditPage() {
   const [board, setBoard] = useState<Board | null>(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
+  const [nickName, setNickName] = useState('')
   const [message, setMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -58,7 +58,7 @@ export default function BoardEditPage() {
       setBoard(data)
       setTitle(data.title)
       setContent(data.content)
-      setAuthor(data.author)
+      setNickName(data.author)
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -68,7 +68,7 @@ export default function BoardEditPage() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!title.trim() || !content.trim() || !author.trim()) {
+    if (!title.trim() || !content.trim() || !nickName.trim()) {
       setMessage('모든 필드를 입력해주세요.')
       return
     }
@@ -85,7 +85,7 @@ export default function BoardEditPage() {
       const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/${uuid}`, {
         method: 'PUT',
         headers,
-        body: JSON.stringify({ title, content, author })
+        body: JSON.stringify({ title, content, author: nickName })
       })
 
       if (!res.ok) {
@@ -172,8 +172,8 @@ export default function BoardEditPage() {
           </label>
           <input 
             type="text" 
-            value={author} 
-            onChange={e => setAuthor(e.target.value)} 
+            value={nickName}
+            onChange={e => setNickName(e.target.value)}
             required
             style={{ 
               width: '100%', 

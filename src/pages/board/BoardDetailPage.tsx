@@ -7,7 +7,7 @@ interface Board {
   uuid: string
   title: string
   content: string
-  author: string
+  nickName: string
   createdAt: string
 }
 
@@ -168,7 +168,7 @@ export default function BoardDetailPage() {
             backgroundColor: '#f8f9fa',
             borderRadius: '4px'
           }}>
-            <span>작성자: <strong>{board.author}</strong></span>
+            <span>작성자: <strong>{board.nickName}</strong></span>
             <span>작성일: <strong>{new Date(board.createdAt).toLocaleString()}</strong></span>
           </div>
 

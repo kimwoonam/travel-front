@@ -7,7 +7,7 @@ interface Board {
   uuid: string
   title: string
   content: string
-  author: string
+  nickName: string
   createdAt: string
 }
 
@@ -39,7 +39,6 @@ export default function BoardListPage() {
       const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards`, {
         headers
       })
-      console.log('응답 상태:', res.status, res.statusText)
 
       if (!res.ok) {
         if (res.status === 401) {
@@ -76,7 +75,6 @@ export default function BoardListPage() {
         method: 'POST',
         headers
       })
-      console.log('샘플 데이터 응답 상태:', res.status, res.statusText)
 
       if (!res.ok) {
         const errorText = await res.text()
@@ -268,7 +266,7 @@ export default function BoardListPage() {
                           {board.content.length > 100 ? `${board.content.substring(0, 100)}...` : board.content}
                         </p>
                         <div style={{display: 'flex', gap: 16, fontSize: '12px', color: '#999'}}>
-                          <span>작성자: {board.author}</span>
+                          <span>작성자: {board.nickName}</span>
                           <span>작성일: {new Date(board.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
