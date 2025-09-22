@@ -10,7 +10,7 @@ export default function BoardWritePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
   const {isLoggedIn, token} = useAuth()
-  const [file, setFile] = useState<File | null>(null) // 파일을 저장할 state
+  const [files, setFiles] = useState<File[]>([]) // 파일을 저장할 state
 
   useEffect(() => {
     // 로그인되지 않은 사용자가 접근하면 홈페이지로 리다이렉트
@@ -20,10 +20,28 @@ export default function BoardWritePage() {
   }, [isLoggedIn, navigate])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0])
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files)
+      const uniqueFiles: File[] = []
+      const existingFileNames = new Set(files.map(file => `${file.name}-${file.size}`))
+
+      selectedFiles.forEach(file => {
+        const fileIdentifier = `${file.name}-${file.size}`
+        if (!existingFileNames.has(fileIdentifier)) {
+          uniqueFiles.push(file)
+          existingFileNames.add(fileIdentifier)
+        } else {
+          setMessage(`'${file.name}' 파일은 이미 선택되었습니다.`)
+        }
+      })
+
+      setFiles(prevFiles => [...prevFiles, ...uniqueFiles])
     }
   }
+
+  const handleRemoveFile = (index: number) => {
+    setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+  };
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
@@ -40,8 +58,10 @@ export default function BoardWritePage() {
     formData.append('title', title)
     formData.append('content', content)
     formData.append('nickName', nickName)
-    if (file) {
-      formData.append('file', file)
+    if (files) {
+      files.forEach(file => {
+        formData.append('files', file);
+      });
     }
 
     const headers: Record<string, string> = {}
@@ -166,6 +186,7 @@ export default function BoardWritePage() {
             </label>
             <input
                 type="file"
+                multiple
                 onChange={handleFileChange}
                 style={{
                   width: '100%',
@@ -175,6 +196,41 @@ export default function BoardWritePage() {
                   fontSize: '16px'
                 }}
             />
+            {files.length > 0 && (
+                <div style={{ marginTop: 15, border: '1px solid #e0e0e0', borderRadius: '4px', padding: 15 }}>
+                  <p style={{ fontWeight: 'bold', marginBottom: 10 }}>선택된 파일 ({files.length}개)</p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {files.map((file, index) => (
+                        <li key={index} style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          padding: '8px 12px',
+                          backgroundColor: '#f9f9f9',
+                          borderRadius: '4px',
+                          marginBottom: '5px',
+                          fontSize: '14px'
+                        }}>
+                          <span>{file.name} ({Math.round(file.size / 1024)} KB)</span>
+                          <button
+                              type="button"
+                              onClick={() => handleRemoveFile(index)}
+                              style={{
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                color: '#dc3545',
+                                cursor: 'pointer',
+                                fontSize: '18px',
+                                lineHeight: '1'
+                              }}
+                          >
+                            &times;
+                          </button>
+                        </li>
+                    ))}
+                  </ul>
+                </div>
+            )}
           </div>
 
           <div style={{display: 'flex', gap: 10, justifyContent: 'flex-end'}}>
