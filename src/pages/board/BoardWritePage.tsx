@@ -23,13 +23,13 @@ export default function BoardWritePage() {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files)
       const uniqueFiles: File[] = []
-      const existingFileNames = new Set(files.map(file => `${file.name}-${file.size}`))
+      const existingFileIdentifiers = new Set(files.map(file => `${file.name}-${file.size}-${file.lastModified}`))
 
       selectedFiles.forEach(file => {
-        const fileIdentifier = `${file.name}-${file.size}`
-        if (!existingFileNames.has(fileIdentifier)) {
+        const fileIdentifier = `${file.name}-${file.size}-${file.lastModified}`
+        if (!existingFileIdentifiers.has(fileIdentifier)) {
           uniqueFiles.push(file)
-          existingFileNames.add(fileIdentifier)
+          existingFileIdentifiers.add(fileIdentifier)
         } else {
           setMessage(`'${file.name}' 파일은 이미 선택되었습니다.`)
         }
@@ -188,6 +188,10 @@ export default function BoardWritePage() {
                 type="file"
                 multiple
                 onChange={handleFileChange}
+                onClick={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  target.value = '';
+                }}
                 style={{
                   width: '100%',
                   padding: '12px',
