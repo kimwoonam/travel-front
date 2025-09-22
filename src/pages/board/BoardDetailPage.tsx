@@ -9,7 +9,15 @@ interface Board {
   content: string
   nickName: string
   createdAt: string
+  files: CommonFile[]
 }
+
+// Board 인터페이스 위에 추가해주세요.
+interface CommonFile {
+  uuid: string
+  originalFileName: string
+}
+
 
 export default function BoardDetailPage() {
   const {uuid} = useParams<{ uuid: string }>()
@@ -19,6 +27,7 @@ export default function BoardDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
+  const [file, setFile] = useState<CommonFile[]>([])
 
   useEffect(() => {
     // 로그인되지 않은 사용자가 접근하면 홈페이지로 리다이렉트
@@ -39,7 +48,7 @@ export default function BoardDetailPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/${uuid}`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/board/${uuid}`, {
         headers
       })
       if (!res.ok) {
@@ -52,7 +61,11 @@ export default function BoardDetailPage() {
         throw new Error('게시글을 불러올 수 없습니다.')
       }
       const data = await res.json()
-      setBoard(data)
+      console.log('받은 데이터:', data)
+      setBoard(data.board)
+      if (data.files) {
+        setFile(data.files)
+      }
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -73,7 +86,7 @@ export default function BoardDetailPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/${uuid}`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/board/${uuid}`, {
         method: 'DELETE',
         headers
       })
@@ -83,7 +96,7 @@ export default function BoardDetailPage() {
       }
 
       alert('게시글이 삭제되었습니다.')
-      navigate('/boards')
+      navigate('/board')
     } catch (err: any) {
       alert(err.message)
     } finally {
@@ -113,7 +126,7 @@ export default function BoardDetailPage() {
         }}>
           <h2>게시글 상세</h2>
           <div style={{display: 'flex', gap: 10}}>
-            <Link to="/boards/new" style={{
+            <Link to="/board/new" style={{
               padding: '8px 16px',
               backgroundColor: '#007bff',
               color: 'white',
@@ -123,7 +136,7 @@ export default function BoardDetailPage() {
               새 글 작성
             </Link>
             <button
-                onClick={() => navigate('/boards')}
+                onClick={() => navigate('/board')}
                 style={{
                   padding: '8px 16px',
                   backgroundColor: '#6c757d',
@@ -182,11 +195,35 @@ export default function BoardDetailPage() {
           }}>
             {board.content}
           </div>
+
+          {file.length > 0 && (
+              <div>
+                <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>첨부 파일</label>
+                <div style={{ border: '1px solid #e0e0e0', borderRadius: '4px', padding: 15 }}>
+                  {file.map(file => (
+                      <div key={file.uuid} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                        <label style={{ fontSize: '14px', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
+                          <a
+                              href={`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/files/${file.uuid}`}
+                              target="_blank" // 새 탭에서 링크를 엽니다.
+                              rel="noopener noreferrer" // 보안을 위한 속성입니다.
+                              onClick={(e) => e.stopPropagation()} // 링크 클릭 시 라벨의 체크박스 동작을 막습니다.
+                              style={{ color: '#007bff', textDecoration: 'underline', marginRight: '5px' }}
+                          >
+                            {file.originalFileName}
+                          </a>
+                        </label>
+                      </div>
+                  ))}
+                </div>
+              </div>
+          )}
         </div>
+
 
         {/* 액션 버튼 */}
         <div style={{display: 'flex', gap: 10, justifyContent: 'center'}}>
-          <Link to={`/boards/${board.uuid}/edit`} style={{
+          <Link to={`/board/${board.uuid}/edit`} style={{
             padding: '12px 24px',
             backgroundColor: '#28a745',
             color: 'white',
@@ -234,7 +271,7 @@ export default function BoardDetailPage() {
             }}>
               게시판 목록
             </Link>
-            <Link to="/boards/new" style={{
+            <Link to="/board/new" style={{
               padding: '8px 16px',
               backgroundColor: '#28a745',
               color: 'white',

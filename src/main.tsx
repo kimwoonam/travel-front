@@ -16,10 +16,10 @@ const router = createBrowserRouter([
   {path: '/signup', element: <SignupPage/>},
   {path: '/login', element: <LoginPage/>},
   {path: '/delete', element: <DeletePage/>},
-  {path: '/boards', element: <BoardListPage/>},
-  {path: '/boards/new', element: <BoardWritePage/>},
-  {path: '/boards/:uuid', element: <BoardDetailPage/>},
-  {path: '/boards/:uuid/edit', element: <BoardEditPage/>},
+  {path: '/board', element: <BoardListPage/>},
+  {path: '/board/new', element: <BoardWritePage/>},
+  {path: '/board/:uuid', element: <BoardDetailPage/>},
+  {path: '/board/:uuid/edit', element: <BoardEditPage/>},
 ])
 
 createRoot(document.getElementById('root')!).render(

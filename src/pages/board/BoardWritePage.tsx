@@ -70,7 +70,7 @@ export default function BoardWritePage() {
     }
 
     try {
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/board`, {
         method: 'POST',
         headers,
         body: formData
@@ -83,7 +83,7 @@ export default function BoardWritePage() {
 
       setMessage('게시글이 성공적으로 작성되었습니다!')
       setTimeout(() => {
-        navigate('/boards')
+        navigate('/board')
       }, 1500)
     } catch (err: any) {
       setMessage(err.message || '에러가 발생했습니다.')
@@ -102,7 +102,7 @@ export default function BoardWritePage() {
         }}>
           <h2>새 게시글 작성</h2>
           <button
-              onClick={() => navigate('/boards')}
+              onClick={() => navigate('/board')}
               style={{
                 padding: '8px 16px',
                 backgroundColor: '#6c757d',
@@ -236,7 +236,7 @@ export default function BoardWritePage() {
           <div style={{display: 'flex', gap: 10, justifyContent: 'flex-end'}}>
             <button
                 type="button"
-                onClick={() => navigate('/boards')}
+                onClick={() => navigate('/board')}
                 style={{
                   padding: '12px 24px',
                   backgroundColor: '#6c757d',

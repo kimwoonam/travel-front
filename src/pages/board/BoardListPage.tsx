@@ -36,7 +36,7 @@ export default function BoardListPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/board`, {
         headers
       })
 
@@ -71,7 +71,7 @@ export default function BoardListPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/init`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/board/init`, {
         method: 'POST',
         headers
       })
@@ -124,7 +124,7 @@ export default function BoardListPage() {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/boards/bulk/${selectedArray.join(',')}`, {
+      const res = await fetch(`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/board/bulk/${selectedArray.join(',')}`, {
         method: 'DELETE',
         headers
       })
@@ -210,7 +210,7 @@ export default function BoardListPage() {
             >
               샘플 데이터 추가
             </button>
-            <Link to="/boards/new" style={{
+            <Link to="/board/new" style={{
               padding: '8px 16px',
               backgroundColor: '#007bff',
               color: 'white',
@@ -257,7 +257,7 @@ export default function BoardListPage() {
                                  onChange={handleCheckboxChange}
                                  value={board.uuid}
                                  style={{marginRight: 10}}/>
-                          <Link to={`/boards/${board.uuid}`}
+                          <Link to={`/board/${board.uuid}`}
                                 style={{color: '#333', textDecoration: 'none'}}>
                             {board.title}
                           </Link>

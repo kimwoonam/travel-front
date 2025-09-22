@@ -8,7 +8,7 @@ export default function IndexPage() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/boards')
+      navigate('/board')
     }
   }, [navigate, isLoggedIn])
 

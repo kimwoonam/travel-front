@@ -11,7 +11,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/boards')
+      navigate('/board')
     }
   }, [isLoggedIn, navigate])
 

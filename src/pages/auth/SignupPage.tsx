@@ -31,7 +31,7 @@ export default function SignupPage() {
       console.log(data);
       login(data.token, data.email, data.name)
       setTimeout(() => {
-        navigate('/boards')
+        navigate('/board')
       }, 1000)
     } catch (err: any) {
       setMessage(err.message || '에러 발생')
