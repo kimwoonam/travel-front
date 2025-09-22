@@ -181,10 +181,34 @@ export default function BoardWritePage() {
 
           {/* 파일 업로드 input 추가 */}
           <div>
-            <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>
+            <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
               파일 첨부 (선택)
             </label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <label
+                  htmlFor="file-upload"
+                  style={{
+                    display: 'inline-block',
+                    padding: '12px 24px',
+                    backgroundColor: '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    textAlign: 'center'
+                  }}
+              >
+                파일 선택
+              </label>
+              {files.length > 0 && (
+                  <span style={{ fontSize: '16px', color: '#555' }}>
+                    파일 {files.length}개
+                  </span>
+              )}
+            </div>
             <input
+                id="file-upload"
                 type="file"
                 multiple
                 onChange={handleFileChange}
@@ -193,11 +217,7 @@ export default function BoardWritePage() {
                   target.value = '';
                 }}
                 style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  fontSize: '16px'
+                  display: 'none',
                 }}
             />
             {files.length > 0 && (
