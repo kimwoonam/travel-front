@@ -125,7 +125,7 @@ export default function BoardEditPage() {
     formData.append('title', title)
     formData.append('content', content)
     formData.append('nickName', nickName)
-    formData.append('deleteFileUuids', filesToDelete.toString())
+    formData.append('deleteFileId', filesToDelete.toString())
     if (newFiles) {
       newFiles.forEach(file => {
         formData.append('files', file);
