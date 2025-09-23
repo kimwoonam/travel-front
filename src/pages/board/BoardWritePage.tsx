@@ -11,13 +11,17 @@ export default function BoardWritePage() {
   const [message, setMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
-  const {isLoggedIn, token} = useAuth()
+  const {isLoggedIn, token, name} = useAuth()
   const [files, setFiles] = useState<File[]>([]) // 파일을 저장할 state
 
   useEffect(() => {
     // 로그인되지 않은 사용자가 접근하면 홈페이지로 리다이렉트
     if (!isLoggedIn) {
       navigate('/')
+    } else {
+      if (name) {
+        setNickName(name);
+      }
     }
   }, [isLoggedIn, navigate])
 
@@ -97,11 +101,11 @@ export default function BoardWritePage() {
   // Quill 에디터 툴바 옵션 설정
   const modules = {
     toolbar: [
-      [{ 'header': '1' }, { 'header': '2' }],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{'header': '1'}, {'header': '2'}],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'align': [] }],
+      [{'color': []}, {'background': []}],
+      [{'align': []}],
       ['link', 'image'],
       ['clean']
     ],
@@ -181,16 +185,16 @@ export default function BoardWritePage() {
                 value={content}
                 onChange={setContent}
                 modules={modules}
-                style={{ height: '300px', marginBottom: '50px' }}
+                style={{height: '300px', marginBottom: '50px'}}
             />
           </div>
 
           {/* 파일 업로드 input 추가 */}
           <div>
-            <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
+            <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>
               파일 첨부 (선택)
             </label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
               <label
                   htmlFor="file-upload"
                   style={{
@@ -208,7 +212,7 @@ export default function BoardWritePage() {
                 파일 선택
               </label>
               {files.length > 0 && (
-                  <span style={{ fontSize: '16px', color: '#555' }}>
+                  <span style={{fontSize: '16px', color: '#555'}}>
                     파일 {files.length}개
                   </span>
               )}
@@ -227,9 +231,14 @@ export default function BoardWritePage() {
                 }}
             />
             {files.length > 0 && (
-                <div style={{ marginTop: 15, border: '1px solid #e0e0e0', borderRadius: '4px', padding: 15 }}>
-                  <p style={{ fontWeight: 'bold', marginBottom: 10 }}>선택된 파일 ({files.length}개)</p>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <div style={{
+                  marginTop: 15,
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '4px',
+                  padding: 15
+                }}>
+                  <p style={{fontWeight: 'bold', marginBottom: 10}}>선택된 파일 ({files.length}개)</p>
+                  <ul style={{listStyle: 'none', padding: 0, margin: 0}}>
                     {files.map((file, index) => (
                         <li key={index} style={{
                           display: 'flex',
