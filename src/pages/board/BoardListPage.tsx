@@ -9,6 +9,7 @@ interface Board {
   content: string
   nickName: string
   createdAt: string
+  thumbnailUrl?: string
 }
 
 export default function BoardListPage() {
@@ -246,6 +247,16 @@ export default function BoardListPage() {
                     padding: '16px',
                     backgroundColor: 'white'
                   }}>
+                    {/* Thumbnail placeholder */}
+                    {board.thumbnailUrl && (
+                        <div style={{ marginRight: '16px', flexShrink: 0 }}>
+                          <img
+                              src={board.thumbnailUrl}
+                              alt="Thumbnail"
+                              style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px' }}
+                          />
+                        </div>
+                    )}
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
