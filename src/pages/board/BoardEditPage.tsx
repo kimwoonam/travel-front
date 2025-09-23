@@ -82,13 +82,13 @@ export default function BoardEditPage() {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files)
       const uniqueFiles: File[] = []
-      const existingFileNames = new Set(newFiles.map(file => `${file.name}-${file.size}`))
+      const existingFileIdentifiers = new Set(newFiles.map(file => `${file.name}-${file.size}-${file.lastModified}`))
 
       selectedFiles.forEach(file => {
-        const fileIdentifier = `${file.name}-${file.size}`
-        if (!existingFileNames.has(fileIdentifier)) {
+        const fileIdentifier = `${file.name}-${file.size}-${file.lastModified}`
+        if (!existingFileIdentifiers.has(fileIdentifier)) {
           uniqueFiles.push(file)
-          existingFileNames.add(fileIdentifier)
+          existingFileIdentifiers.add(fileIdentifier)
         } else {
           setMessage(`'${file.name}' 파일은 이미 선택되었습니다.`)
         }
@@ -255,19 +255,43 @@ export default function BoardEditPage() {
 
         {/* 파일 업로드 input 추가 */}
         <div>
-          <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>
+          <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
             파일 첨부 (선택)
           </label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <label
+                htmlFor="file-upload"
+                style={{
+                  display: 'inline-block',
+                  padding: '12px 24px',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  textAlign: 'center'
+                }}
+            >
+              파일 선택
+            </label>
+            {newFiles.length > 0 && (
+                <span style={{ fontSize: '16px', color: '#555' }}>
+                    파일 {newFiles.length}개
+                  </span>
+            )}
+          </div>
           <input
+              id="file-upload"
               type="file"
               multiple
               onChange={handleNewFileChange}
+              onClick={(e) => {
+                const target = e.target as HTMLInputElement;
+                target.value = '';
+              }}
               style={{
-                width: '100%',
-                padding: '12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '16px'
+                display: 'none',
               }}
           />
           {newFiles.length > 0 && (
