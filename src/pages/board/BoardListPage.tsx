@@ -262,8 +262,10 @@ export default function BoardListPage() {
                             {board.title}
                           </Link>
                         </h3>
-                        <p style={{margin: '0 0 8px 0', color: '#666', fontSize: '14px'}}>
-                          {board.content.length > 100 ? `${board.content.substring(0, 100)}...` : board.content}
+                        <p
+                            style={{margin: '0 0 8px 0', color: '#666', fontSize: '14px'}}
+                        >
+                          {board.content.length > 100 ? `${board.content.substring(0, 100).replace(/<[^>]*>?/g, "")}...` : `${board.content.replace(/<[^>]*>?/g, "")}`}
                         </p>
                         <div style={{display: 'flex', gap: 16, fontSize: '12px', color: '#999'}}>
                           <span>작성자: {board.nickName}</span>
