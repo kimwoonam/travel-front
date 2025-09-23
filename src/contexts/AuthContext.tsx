@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 
 // AuthContextType 인터페이스와 AuthContext를 컴포넌트 외부로 이동시킵니다.
@@ -6,8 +6,8 @@ import Cookies from 'js-cookie';
 interface AuthContextType {
   isLoggedIn: boolean;
   token: string | null;
-  userEmail: string | null;
-  userDisplayName: string | null;
+  email: string | null;
+  name: string | null;
   login: (token: string, email: string, displayName: string) => void;
   logout: () => void;
 }
@@ -15,11 +15,11 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // AuthProvider를 기본 내보내기(default export)로 변경하여 import 오류를 수정합니다.
-export default function AuthProvider({ children }: { children: ReactNode }) {
+export default function AuthProvider({children}: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
 
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 상태 확인
@@ -34,25 +34,25 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login = (token: string, email: string, displayName: string) => {
+  const login = (token: string, email: string, name: string) => {
 
     setIsLoggedIn(true);
     setToken(token);
-    setUserEmail(email);
-    setUserDisplayName(displayName);
-    Cookies.set('travel-jwt', token, { expires: 1/24, path: "/", sameSite: "Strict", domain: "127.0.0.1" });
+    setEmail(email);
+    setName(name);
+    // Cookies.set('travel-jwt', token, { expires: 1/24, path: "/", sameSite: "Strict", domain: "127.0.0.1" });
   };
 
   const logout = () => {
     setIsLoggedIn(false);
     setToken(null);
-    setUserEmail(null);
-    setUserDisplayName(null);
-    Cookies.remove('travel-jwt', { path: "/", sameSite: "Strict", domain: "127.0.0.1" });
+    setEmail(null);
+    setName(null);
+    // Cookies.remove('travel-jwt', { path: "/", sameSite: "Strict", domain: "127.0.0.1" });
   };
 
   return (
-      <AuthContext.Provider value={{ isLoggedIn, token, userEmail, userDisplayName, login, logout }}>
+      <AuthContext.Provider value={{isLoggedIn, token, email, name, login, logout}}>
         {children}
       </AuthContext.Provider>
   );
