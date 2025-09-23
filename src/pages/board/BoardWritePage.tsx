@@ -107,7 +107,6 @@ export default function BoardWritePage() {
     ],
   };
 
-
   return (
       <div style={{maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, -apple-system'}}>
         <div style={{
