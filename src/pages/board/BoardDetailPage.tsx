@@ -115,7 +115,7 @@ export default function BoardDetailPage() {
       <div style={{maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, -apple-system'}}>
         <div style={{textAlign: 'center', color: 'red', marginBottom: 20}}>{error}</div>
         <div style={{textAlign: 'center'}}>
-          <Link to="/boards" style={{color: '#007bff', textDecoration: 'none'}}>게시판 목록으로 돌아가기</Link>
+          <Link to="/board" style={{color: '#007bff', textDecoration: 'none'}}>게시판 목록으로 돌아가기</Link>
         </div>
       </div>
   )
@@ -273,7 +273,7 @@ export default function BoardDetailPage() {
             다른 게시글도 확인해보세요
           </p>
           <div style={{display: 'flex', gap: 10, justifyContent: 'center'}}>
-            <Link to="/boards" style={{
+            <Link to="/board" style={{
               padding: '8px 16px',
               backgroundColor: '#007bff',
               color: 'white',
