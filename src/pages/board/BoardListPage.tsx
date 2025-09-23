@@ -249,11 +249,16 @@ export default function BoardListPage() {
                   }}>
                     {/* Thumbnail placeholder */}
                     {board.thumbnailUrl && (
-                        <div style={{ marginRight: '16px', flexShrink: 0 }}>
+                        <div style={{marginRight: '16px', flexShrink: 0}}>
                           <img
                               src={board.thumbnailUrl}
                               alt="Thumbnail"
-                              style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px' }}
+                              style={{
+                                width: '100px',
+                                height: '100px',
+                                objectFit: 'cover',
+                                borderRadius: '4px'
+                              }}
                           />
                         </div>
                     )}

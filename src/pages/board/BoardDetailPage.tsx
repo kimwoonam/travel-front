@@ -20,7 +20,6 @@ interface CommonFile {
   originalFileName: string
 }
 
-
 export default function BoardDetailPage() {
   const {uuid} = useParams<{ uuid: string }>()
   const navigate = useNavigate()
@@ -209,17 +208,27 @@ export default function BoardDetailPage() {
 
           {file.length > 0 && (
               <div>
-                <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>첨부 파일</label>
-                <div style={{ border: '1px solid #e0e0e0', borderRadius: '4px', padding: 15 }}>
+                <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>첨부 파일</label>
+                <div style={{border: '1px solid #e0e0e0', borderRadius: '4px', padding: 15}}>
                   {file.map(file => (
-                      <div key={file.uuid} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                        <label style={{ fontSize: '14px', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
+                      <div key={file.uuid}
+                           style={{display: 'flex', alignItems: 'center', marginBottom: '8px'}}>
+                        <label style={{
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          textDecoration: 'none',
+                          color: 'inherit'
+                        }}>
                           <a
                               href={`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/file/${token},${file.uuid}`}
                               target="_blank" // 새 탭에서 링크를 엽니다.
                               rel="noopener noreferrer" // 보안을 위한 속성입니다.
                               onClick={(e) => e.stopPropagation()} // 링크 클릭 시 라벨의 체크박스 동작을 막습니다.
-                              style={{ color: '#007bff', textDecoration: 'underline', marginRight: '5px' }}
+                              style={{
+                                color: '#007bff',
+                                textDecoration: 'underline',
+                                marginRight: '5px'
+                              }}
                           >
                             {file.originalFileName}
                           </a>
@@ -230,7 +239,6 @@ export default function BoardDetailPage() {
               </div>
           )}
         </div>
-
 
         {/* 액션 버튼 */}
         <div style={{display: 'flex', gap: 10, justifyContent: 'center'}}>

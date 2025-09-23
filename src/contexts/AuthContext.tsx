@@ -8,7 +8,7 @@ interface AuthContextType {
   token: string | null;
   email: string | null;
   name: string | null;
-  login: (token: string, email: string, displayName: string) => void;
+  login: (token: string, email: string, name: string) => void;
   logout: () => void;
 }
 
@@ -40,7 +40,6 @@ export default function AuthProvider({children}: { children: ReactNode }) {
     setToken(token);
     setEmail(email);
     setName(name);
-    // Cookies.set('travel-jwt', token, { expires: 1/24, path: "/", sameSite: "Strict", domain: "127.0.0.1" });
   };
 
   const logout = () => {
@@ -48,7 +47,6 @@ export default function AuthProvider({children}: { children: ReactNode }) {
     setToken(null);
     setEmail(null);
     setName(null);
-    // Cookies.remove('travel-jwt', { path: "/", sameSite: "Strict", domain: "127.0.0.1" });
   };
 
   return (
