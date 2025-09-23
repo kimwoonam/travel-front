@@ -1,6 +1,8 @@
-import { FormEvent, useState, useEffect } from 'react'
+import { FormEvent, useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface Board {
   id: number
@@ -34,6 +36,7 @@ export default function BoardEditPage() {
   const [newFiles, setNewFiles] = useState<File[]>([]) // 파일을 저장할 state
   const [existingFiles, setExistingFiles] = useState<CommonFile[]>([]) // 기존 파일 목록
   const [filesToDelete, setFilesToDelete] = useState<string[]>([])    // 삭제할 파일 uuid 목록
+  const quillRef = useRef<ReactQuill>(null); // Quill 인스턴스에 접근하기 위한 ref
 
   useEffect(() => {
     // 로그인되지 않은 사용자가 접근하면 홈페이지로 리다이렉트
@@ -159,6 +162,19 @@ export default function BoardEditPage() {
       setIsSubmitting(false)
     }
   }
+
+  // Quill 에디터 툴바 옵션 설정
+  const modules = {
+    toolbar: [
+      [{ 'header': '1' }, { 'header': '2' }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      ['link', 'image'],
+      ['clean']
+    ],
+  };
 
   if (loading) return <div style={{ textAlign: 'center', marginTop: 40 }}>로딩 중...</div>
   if (error) return (
@@ -355,21 +371,13 @@ export default function BoardEditPage() {
           <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
             내용 *
           </label>
-          <textarea 
-            value={content} 
-            onChange={e => setContent(e.target.value)} 
-            required
-            rows={10}
-            style={{ 
-              width: '100%', 
-              padding: '12px', 
-              border: '1px solid #ddd', 
-              borderRadius: '4px',
-              fontSize: '16px',
-              resize: 'vertical',
-              fontFamily: 'inherit'
-            }}
-            placeholder="게시글 내용을 입력하세요"
+          <ReactQuill
+              ref={quillRef} // ref 연결
+              theme="snow"
+              value={content}
+              onChange={setContent}
+              modules={modules}
+              style={{ height: '300px', marginBottom: '50px' }}
           />
         </div>
 

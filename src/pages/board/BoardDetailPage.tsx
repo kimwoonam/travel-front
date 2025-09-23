@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import {useAuth} from '../../contexts/AuthContext'
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface Board {
   id: number
@@ -104,6 +106,10 @@ export default function BoardDetailPage() {
     }
   }
 
+  const modules = {
+    toolbar: false
+  };
+
   if (loading) return <div style={{textAlign: 'center', marginTop: 40}}>로딩 중...</div>
   if (error) return (
       <div style={{maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, -apple-system'}}>
@@ -193,7 +199,12 @@ export default function BoardDetailPage() {
             whiteSpace: 'pre-wrap',
             minHeight: '200px'
           }}>
-            {board.content}
+            <ReactQuill
+                value={board.content}
+                readOnly={true}
+                theme="snow"
+                modules={modules} // 툴바를 숨깁니다.
+            />
           </div>
 
           {file.length > 0 && (
