@@ -349,13 +349,14 @@ export default function BoardEditPage() {
 
         <div>
           <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
-            작성자 *
+            작성자
           </label>
           <input 
             type="text" 
             value={nickName}
             onChange={e => setNickName(e.target.value)}
             required
+            readOnly={true}
             style={{ 
               width: '100%', 
               padding: '12px', 
