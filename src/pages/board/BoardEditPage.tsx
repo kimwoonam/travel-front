@@ -1,6 +1,6 @@
-import { FormEvent, useState, useEffect, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../contexts/AuthContext'
+import {FormEvent, useEffect, useRef, useState} from 'react'
+import {useNavigate, useParams} from 'react-router-dom'
+import {useAuth} from '../../contexts/AuthContext'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -21,9 +21,9 @@ interface CommonFile {
 }
 
 export default function BoardEditPage() {
-  const { uuid } = useParams<{ uuid: string }>()
+  const {uuid} = useParams<{ uuid: string }>()
   const navigate = useNavigate()
-  const { isLoggedIn, token } = useAuth()
+  const {isLoggedIn, token} = useAuth()
   const [board, setBoard] = useState<Board | null>(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -166,268 +166,289 @@ export default function BoardEditPage() {
   // Quill 에디터 툴바 옵션 설정
   const modules = {
     toolbar: [
-      [{ 'header': '1' }, { 'header': '2' }],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{'header': '1'}, {'header': '2'}],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'align': [] }],
+      [{'color': []}, {'background': []}],
+      [{'align': []}],
       ['link', 'image'],
       ['clean']
     ],
   };
 
-  if (loading) return <div style={{ textAlign: 'center', marginTop: 40 }}>로딩 중...</div>
+  if (loading) return <div style={{textAlign: 'center', marginTop: 40}}>로딩 중...</div>
   if (error) return (
-    <div style={{ maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, -apple-system' }}>
-      <div style={{ textAlign: 'center', color: 'red', marginBottom: 20 }}>{error}</div>
-      <div style={{ textAlign: 'center' }}>
-        <button 
-          onClick={() => navigate('/board')}
-          style={{ 
-            padding: '8px 16px', 
-            backgroundColor: '#007bff', 
-            color: 'white', 
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          게시판 목록으로 돌아가기
-        </button>
+      <div style={{maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, -apple-system'}}>
+        <div style={{textAlign: 'center', color: 'red', marginBottom: 20}}>{error}</div>
+        <div style={{textAlign: 'center'}}>
+          <button
+              onClick={() => navigate('/board')}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+          >
+            게시판 목록으로 돌아가기
+          </button>
+        </div>
       </div>
-    </div>
   )
 
   return (
-    <div style={{ maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, -apple-system' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }}>
-        <h2>게시글 수정</h2>
-        <button 
-          onClick={() => navigate(`/board/${uuid}`)}
-          style={{ 
-            padding: '8px 16px', 
-            backgroundColor: '#6c757d', 
-            color: 'white', 
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          취소
-        </button>
-      </div>
-
-      <form onSubmit={onSubmit} style={{ display: 'grid', gap: 20 }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
-            제목 *
-          </label>
-          <input 
-            type="text" 
-            value={title} 
-            onChange={e => setTitle(e.target.value)} 
-            required
-            style={{ 
-              width: '100%', 
-              padding: '12px', 
-              border: '1px solid #ddd', 
-              borderRadius: '4px',
-              fontSize: '16px'
-            }}
-            placeholder="게시글 제목을 입력하세요"
-          />
+      <div style={{maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, -apple-system'}}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 30
+        }}>
+          <h2>게시글 수정</h2>
+          <button
+              onClick={() => navigate(`/board/${uuid}`)}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+          >
+            취소
+          </button>
         </div>
 
-        {/* 기존 파일 목록 및 삭제 UI */}
-        {existingFiles.length > 0 && (
-            <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>기존 첨부 파일</label>
-              <div style={{ border: '1px solid #e0e0e0', borderRadius: '4px', padding: 15 }}>
-                {existingFiles.map(file => (
-                    <div key={file.uuid} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                      <input
-                          type="checkbox"
-                          id={`delete-${file.uuid}`}
-                          checked={filesToDelete.includes(file.uuid)}
-                          onChange={() => handleDeleteFileChange(file.uuid)}
-                          style={{ marginRight: '10px', width: '16px', height: '16px' }}
-                      />
-                      <label htmlFor={`delete-${file.uuid}`} style={{ fontSize: '14px', cursor: 'pointer', textDecoration: filesToDelete.includes(file.uuid) ? 'line-through' : 'none', color: filesToDelete.includes(file.uuid) ? '#888' : 'inherit' }}>
-                        <a
-                            href={`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/file/${token},${file.uuid}`}
-                            target="_blank" // 새 탭에서 링크를 엽니다.
-                            rel="noopener noreferrer" // 보안을 위한 속성입니다.
-                            onClick={(e) => e.stopPropagation()} // 링크 클릭 시 라벨의 체크박스 동작을 막습니다.
-                            style={{ color: '#007bff', textDecoration: 'underline', marginRight: '5px' }}
-                        >
-                        {file.originalFileName} (삭제하려면 체크)
-                        </a>
-                      </label>
-                    </div>
-                ))}
-              </div>
-            </div>
-        )}
-
-        {/* 파일 업로드 input 추가 */}
-        <div>
-          <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
-            파일 첨부 (선택)
-          </label>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <label
-                htmlFor="file-upload"
+        <form onSubmit={onSubmit} style={{display: 'grid', gap: 20}}>
+          <div>
+            <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>
+              제목 *
+            </label>
+            <input
+                type="text"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                required
                 style={{
-                  display: 'inline-block',
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '16px'
+                }}
+                placeholder="게시글 제목을 입력하세요"
+            />
+          </div>
+
+          {/* 기존 파일 목록 및 삭제 UI */}
+          {existingFiles.length > 0 && (
+              <div>
+                <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>기존 첨부
+                  파일</label>
+                <div style={{border: '1px solid #e0e0e0', borderRadius: '4px', padding: 15}}>
+                  {existingFiles.map(file => (
+                      <div key={file.uuid}
+                           style={{display: 'flex', alignItems: 'center', marginBottom: '8px'}}>
+                        <input
+                            type="checkbox"
+                            id={`delete-${file.uuid}`}
+                            checked={filesToDelete.includes(file.uuid)}
+                            onChange={() => handleDeleteFileChange(file.uuid)}
+                            style={{marginRight: '10px', width: '16px', height: '16px'}}
+                        />
+                        <label htmlFor={`delete-${file.uuid}`} style={{
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          textDecoration: filesToDelete.includes(file.uuid) ? 'line-through' : 'none',
+                          color: filesToDelete.includes(file.uuid) ? '#888' : 'inherit'
+                        }}>
+                          <a
+                              href={`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/file/${token},${file.uuid}`}
+                              target="_blank" // 새 탭에서 링크를 엽니다.
+                              rel="noopener noreferrer" // 보안을 위한 속성입니다.
+                              onClick={(e) => e.stopPropagation()} // 링크 클릭 시 라벨의 체크박스 동작을 막습니다.
+                              style={{
+                                color: '#007bff',
+                                textDecoration: 'underline',
+                                marginRight: '5px'
+                              }}
+                          >
+                            {file.originalFileName} (삭제하려면 체크)
+                          </a>
+                        </label>
+                      </div>
+                  ))}
+                </div>
+              </div>
+          )}
+
+          {/* 파일 업로드 input 추가 */}
+          <div>
+            <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>
+              파일 첨부 (선택)
+            </label>
+            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+              <label
+                  htmlFor="file-upload"
+                  style={{
+                    display: 'inline-block',
+                    padding: '12px 24px',
+                    backgroundColor: '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    textAlign: 'center'
+                  }}
+              >
+                파일 선택
+              </label>
+              {newFiles.length > 0 && (
+                  <span style={{fontSize: '16px', color: '#555'}}>
+                    파일 {newFiles.length}개
+                  </span>
+              )}
+            </div>
+            <input
+                id="file-upload"
+                type="file"
+                multiple
+                onChange={handleNewFileChange}
+                onClick={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  target.value = '';
+                }}
+                style={{
+                  display: 'none',
+                }}
+            />
+            {newFiles.length > 0 && (
+                <div style={{
+                  marginTop: 15,
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '4px',
+                  padding: 15
+                }}>
+                  <p style={{fontWeight: 'bold', marginBottom: 10}}>선택된 파일 ({newFiles.length}개)</p>
+                  <ul style={{listStyle: 'none', padding: 0, margin: 0}}>
+                    {newFiles.map((file, index) => (
+                        <li key={index} style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          padding: '8px 12px',
+                          backgroundColor: '#f9f9f9',
+                          borderRadius: '4px',
+                          marginBottom: '5px',
+                          fontSize: '14px'
+                        }}>
+                          <span>{file.name} ({Math.round(file.size / 1024)} KB)</span>
+                          <button
+                              type="button"
+                              onClick={() => handleRemoveNewFile(index)}
+                              style={{
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                color: '#dc3545',
+                                cursor: 'pointer',
+                                fontSize: '18px',
+                                lineHeight: '1'
+                              }}
+                          >
+                            &times;
+                          </button>
+                        </li>
+                    ))}
+                  </ul>
+                </div>
+            )}
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>
+              작성자
+            </label>
+            <input
+                type="text"
+                value={nickName}
+                onChange={e => setNickName(e.target.value)}
+                required
+                readOnly={true}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '16px'
+                }}
+                placeholder="작성자 이름을 입력하세요"
+            />
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>
+              내용 *
+            </label>
+            <ReactQuill
+                ref={quillRef} // ref 연결
+                theme="snow"
+                value={content}
+                onChange={setContent}
+                modules={modules}
+                style={{height: '300px', marginBottom: '50px'}}
+            />
+          </div>
+
+          <div style={{display: 'flex', gap: 10, justifyContent: 'flex-end'}}>
+            <button
+                type="button"
+                onClick={() => navigate(`/board/${uuid}`)}
+                style={{
                   padding: '12px 24px',
-                  backgroundColor: '#007bff',
+                  backgroundColor: '#6c757d',
                   color: 'white',
                   border: 'none',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  fontSize: '16px',
-                  textAlign: 'center'
+                  fontSize: '16px'
                 }}
             >
-              파일 선택
-            </label>
-            {newFiles.length > 0 && (
-                <span style={{ fontSize: '16px', color: '#555' }}>
-                    파일 {newFiles.length}개
-                  </span>
-            )}
+              취소
+            </button>
+            <button
+                type="submit"
+                disabled={isSubmitting}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: isSubmitting ? '#ccc' : '#28a745',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  fontSize: '16px'
+                }}
+            >
+              {isSubmitting ? '수정 중...' : '게시글 수정'}
+            </button>
           </div>
-          <input
-              id="file-upload"
-              type="file"
-              multiple
-              onChange={handleNewFileChange}
-              onClick={(e) => {
-                const target = e.target as HTMLInputElement;
-                target.value = '';
-              }}
-              style={{
-                display: 'none',
-              }}
-          />
-          {newFiles.length > 0 && (
-              <div style={{ marginTop: 15, border: '1px solid #e0e0e0', borderRadius: '4px', padding: 15 }}>
-                <p style={{ fontWeight: 'bold', marginBottom: 10 }}>선택된 파일 ({newFiles.length}개)</p>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                  {newFiles.map((file, index) => (
-                      <li key={index} style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '8px 12px',
-                        backgroundColor: '#f9f9f9',
-                        borderRadius: '4px',
-                        marginBottom: '5px',
-                        fontSize: '14px'
-                      }}>
-                        <span>{file.name} ({Math.round(file.size / 1024)} KB)</span>
-                        <button
-                            type="button"
-                            onClick={() => handleRemoveNewFile(index)}
-                            style={{
-                              backgroundColor: 'transparent',
-                              border: 'none',
-                              color: '#dc3545',
-                              cursor: 'pointer',
-                              fontSize: '18px',
-                              lineHeight: '1'
-                            }}
-                        >
-                          &times;
-                        </button>
-                      </li>
-                  ))}
-                </ul>
-              </div>
-          )}
-        </div>
+        </form>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
-            작성자
-          </label>
-          <input 
-            type="text" 
-            value={nickName}
-            onChange={e => setNickName(e.target.value)}
-            required
-            readOnly={true}
-            style={{ 
-              width: '100%', 
-              padding: '12px', 
-              border: '1px solid #ddd', 
+        {message && (
+            <div style={{
+              marginTop: 20,
+              padding: '12px',
               borderRadius: '4px',
-              fontSize: '16px'
-            }}
-            placeholder="작성자 이름을 입력하세요"
-          />
-        </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
-            내용 *
-          </label>
-          <ReactQuill
-              ref={quillRef} // ref 연결
-              theme="snow"
-              value={content}
-              onChange={setContent}
-              modules={modules}
-              style={{ height: '300px', marginBottom: '50px' }}
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button 
-            type="button"
-            onClick={() => navigate(`/board/${uuid}`)}
-            style={{ 
-              padding: '12px 24px', 
-              backgroundColor: '#6c757d', 
-              color: 'white', 
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '16px'
-            }}
-          >
-            취소
-          </button>
-          <button 
-            type="submit" 
-            disabled={isSubmitting}
-            style={{ 
-              padding: '12px 24px', 
-              backgroundColor: isSubmitting ? '#ccc' : '#28a745', 
-              color: 'white', 
-              border: 'none',
-              borderRadius: '4px',
-              cursor: isSubmitting ? 'not-allowed' : 'pointer',
-              fontSize: '16px'
-            }}
-          >
-            {isSubmitting ? '수정 중...' : '게시글 수정'}
-          </button>
-        </div>
-      </form>
-
-      {message && (
-        <div style={{ 
-          marginTop: 20, 
-          padding: '12px', 
-          borderRadius: '4px',
-          backgroundColor: message.includes('성공') ? '#d4edda' : '#f8d7da',
-          color: message.includes('성공') ? '#155724' : '#721c24',
-          border: `1px solid ${message.includes('성공') ? '#c3e6cb' : '#f5c6cb'}`
-        }}>
-          {message}
-        </div>
-      )}
-    </div>
+              backgroundColor: message.includes('성공') ? '#d4edda' : '#f8d7da',
+              color: message.includes('성공') ? '#155724' : '#721c24',
+              border: `1px solid ${message.includes('성공') ? '#c3e6cb' : '#f5c6cb'}`
+            }}>
+              {message}
+            </div>
+        )}
+      </div>
   )
 }
