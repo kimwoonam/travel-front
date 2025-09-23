@@ -1,6 +1,8 @@
 import {FormEvent, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../contexts/AuthContext'
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Quill 테마 스타일
 
 export default function BoardWritePage() {
   const [title, setTitle] = useState('')
@@ -92,6 +94,20 @@ export default function BoardWritePage() {
     }
   }
 
+  // Quill 에디터 툴바 옵션 설정
+  const modules = {
+    toolbar: [
+      [{ 'header': '1' }, { 'header': '2' }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      ['link', 'image'],
+      ['clean']
+    ],
+  };
+
+
   return (
       <div style={{maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, -apple-system'}}>
         <div style={{
@@ -161,21 +177,12 @@ export default function BoardWritePage() {
             <label style={{display: 'block', marginBottom: 8, fontWeight: 'bold'}}>
               내용 *
             </label>
-            <textarea
+            <ReactQuill
+                theme="snow"
                 value={content}
-                onChange={e => setContent(e.target.value)}
-                required
-                rows={10}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  fontSize: '16px',
-                  resize: 'vertical',
-                  fontFamily: 'inherit'
-                }}
-                placeholder="게시글 내용을 입력하세요"
+                onChange={setContent}
+                modules={modules}
+                style={{ height: '300px', marginBottom: '50px' }}
             />
           </div>
 
