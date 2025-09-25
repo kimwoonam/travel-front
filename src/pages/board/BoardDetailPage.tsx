@@ -220,7 +220,7 @@ export default function BoardDetailPage() {
                           color: 'inherit'
                         }}>
                           <a
-                              href={`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/file/${token},${file.uuid}`}
+                              href={`${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/file/download/${token},${file.uuid}`}
                               target="_blank" // 새 탭에서 링크를 엽니다.
                               rel="noopener noreferrer" // 보안을 위한 속성입니다.
                               onClick={(e) => e.stopPropagation()} // 링크 클릭 시 라벨의 체크박스 동작을 막습니다.
