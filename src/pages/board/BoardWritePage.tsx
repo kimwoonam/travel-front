@@ -1,4 +1,4 @@
-import {FormEvent, useEffect, useState} from 'react'
+import {FormEvent, useEffect, useState, useRef, useMemo, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../contexts/AuthContext'
 import ReactQuill from 'react-quill';
@@ -13,6 +13,7 @@ export default function BoardWritePage() {
   const navigate = useNavigate()
   const {isLoggedIn, token, name} = useAuth()
   const [files, setFiles] = useState<File[]>([]) // 파일을 저장할 state
+  const quillRef = useRef<ReactQuill>(null); // Quill 인스턴스에 접근하기 위한 ref
 
   useEffect(() => {
     // 로그인되지 않은 사용자가 접근하면 홈페이지로 리다이렉트
@@ -97,6 +98,58 @@ export default function BoardWritePage() {
       setIsSubmitting(false)
     }
   }
+
+  // 이미지 업로드 핸들러
+  const imageHandler = useCallback(() => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      const formData = new FormData();
+      formData.append('tableId', '999999999');
+      formData.append('tableName', 'board');
+      formData.append('thumbnailYn', 'Y');
+      if (file) {
+        formData.append('imageFile', file);
+      }
+
+      try {
+
+        const headers: Record<string, string> = {'Content-Type': 'application/json'}
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`
+        }
+
+        let imageUrl = `${(import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8080'}/api/file`
+
+        const res = await fetch(imageUrl + '/upload/image', {
+          method: 'POST',
+          headers,
+          body: formData
+        });
+
+        if (!res.ok) {
+          throw new Error('이미지 업로드 실패');
+        }
+
+        const result = await res.json();
+        const imageUuid = result.uuid;
+
+        const quill = quillRef.current?.getEditor();
+        if (quill) {
+          const range = quill.getSelection(true);
+          quill.insertEmbed(range.index, 'image', imageUrl + '/view/image/' + imageUuid);
+          quill.setSelection(range.index + 1);
+        }
+      } catch (error) {
+        console.error('이미지 업로드 에러:', error);
+        setMessage('이미지 업로드에 실패했습니다.');
+      }
+    };
+  }, []);
 
   // Quill 에디터 툴바 옵션 설정
   const modules = {
