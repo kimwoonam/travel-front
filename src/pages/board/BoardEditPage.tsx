@@ -1,8 +1,8 @@
 import {FormEvent, useEffect, useRef, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useAuth} from '../../contexts/AuthContext'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'quill/dist/quill.snow.css';
 
 interface Board {
   id: number

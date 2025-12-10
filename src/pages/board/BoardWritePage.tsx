@@ -1,8 +1,8 @@
 import {FormEvent, useEffect, useState, useRef, useMemo, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../contexts/AuthContext'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Quill 테마 스타일
+import ReactQuill from 'react-quill-new';
+import 'quill/dist/quill.snow.css'; // Quill 테마 스타일
 
 export default function BoardWritePage() {
   const [title, setTitle] = useState('')
