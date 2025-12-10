@@ -14,23 +14,23 @@
   "dependencies": {
     "js-cookie": "^3.0.5",
     "quill": "^2.0.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-quill": "^2.0.0",
-    "react-router-dom": "^6.26.1"
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-quill-new": "^3.6.0",
+    "react-router-dom": "^7.10.1"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
-    "@types/react": "^18.3.5",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "@testing-library/react": "^14.1.2",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "@testing-library/react": "^16.3.0",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/user-event": "^14.5.1",
-    "@vitest/ui": "^1.0.4",
-    "jsdom": "^23.0.1",
-    "typescript": "^5.5.4",
-    "vite": "^5.3.4",
-    "vitest": "^1.0.4"
+    "@vitest/ui": "^4.0.15",
+    "jsdom": "^27.3.0",
+    "typescript": "^5.9.3",
+    "vite": "7.1.11",
+    "vitest": "^4.0.15"
   }
 }
